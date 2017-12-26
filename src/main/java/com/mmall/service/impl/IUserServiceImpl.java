@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 /**
+ * 用户管理实现
  * Created by yangqun on 2017/12/23.
  */
 @Service("iUserService")
@@ -29,7 +30,6 @@ public class IUserServiceImpl implements IUserService{
             return ServerResponse.createByErrorMessage("没有找到用户");
         }
 
-        //todo md5加密
         password = MD5Util.MD5EncodeUtf8(password);
         //验证账号密码
         User user = userMapper.selectLogin(username,password);

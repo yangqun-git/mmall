@@ -3,15 +3,14 @@ package com.mmall.service;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 
-import javax.servlet.http.HttpSession;
-
 /**
+ * 用户接口
  * Created by yangqun on 2017/12/23.
  */
 public interface IUserService {
     ServerResponse<User> login(String username,String password);
 
-    ServerResponse<String> register(User user);
+    ServerResponse register(User user);
 
     ServerResponse<String> checkValid(String str,String type);
 

@@ -6,6 +6,7 @@ import com.mmall.pojo.Product;
 import com.mmall.vo.ProductDetailVo;
 
 /**
+ * 商品接口
  * Created by yangqun on 2017/12/25.
  */
 public interface IProductService {
@@ -16,4 +17,6 @@ public interface IProductService {
     ServerResponse<ProductDetailVo> manageProductDetail(Integer productId);
 
     ServerResponse<PageInfo> getProductList(Integer pageNum, Integer pageSize);
+
+    ServerResponse<PageInfo> searchProduct(Integer productId,String productName,Integer pageNum,Integer pageSize);
 }

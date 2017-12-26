@@ -6,6 +6,7 @@ import com.mmall.pojo.Category;
 import java.util.List;
 
 /**
+ * 商品分类接口
  * Created by yangqun on 2017/12/25.
  */
 public interface ICategoryService {

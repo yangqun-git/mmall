@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 商品管理实现
  * Created by yangqun on 2017/12/25.
  */
 @Service("iProductService")
@@ -99,7 +100,7 @@ public class IProductServiceImpl implements IProductService {
         productDetailVo.setStock(product.getStock());
 
         //ImageHost
-        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://192.168.5.128/"));
+        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://192.168.25.128/"));
         //parentCategoryId
         Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
         if (category == null){
@@ -125,8 +126,8 @@ public class IProductServiceImpl implements IProductService {
         List<ProductListVo> voList = new ArrayList<>();
         List<Product> productList = productMapper.seledctList();
         for (Product product : productList){
-            ProductListVo productvo = assembleProductListVo(product);
-            voList.add(productvo);
+            ProductListVo productVo = assembleProductListVo(product);
+            voList.add(productVo);
         }
         PageInfo pageInfo = new PageInfo(productList);
         pageInfo.setList(voList);
@@ -143,7 +144,25 @@ public class IProductServiceImpl implements IProductService {
         productListVo.setMainImage(product.getMainImage());
         productListVo.setPrice(product.getPrice());
         productListVo.setStatus(product.getStatus());
-        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://192.168.5.128/"));
+        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://192.168.25.128/"));
         return productListVo;
+    }
+
+    /*根据商品id和商品名字查找商品*/
+    public ServerResponse<PageInfo> searchProduct(Integer productId,String productName,Integer pageNum,Integer pageSize){
+        PageHelper.startPage(pageNum,pageSize);
+        if (StringUtils.isNotBlank(productName)){
+            productName = new StringBuilder().append("%").append(productName).append("%").toString();
+        }
+        List<ProductListVo> voList = new ArrayList<>();
+        List<Product> productList = productMapper.selectProductByNameAndId(productName,productId);
+        for (Product product : productList){
+            ProductListVo productVo = assembleProductListVo(product);
+            voList.add(productVo);
+        }
+        PageInfo pageInfo = new PageInfo(productList);
+        pageInfo.setList(voList);
+
+        return ServerResponse.createBySuccess(pageInfo);
     }
 }

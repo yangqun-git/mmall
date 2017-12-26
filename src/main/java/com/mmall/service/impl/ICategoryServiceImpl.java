@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 分类模块实现
  * Created by yangqun on 2017/12/25.
  */
 @Service("iCategoryService")

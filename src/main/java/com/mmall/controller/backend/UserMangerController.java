@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 /**
+ * 管理员登录模块
  * Created by yangqun on 2017/12/23.
  */
 @Controller

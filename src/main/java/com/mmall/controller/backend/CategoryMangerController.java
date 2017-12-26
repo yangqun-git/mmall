@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
+ * 管理员分类管理模块
  * Created by yangqun on 2017/12/25.
  */
 @Controller
