@@ -185,4 +185,12 @@ public class IUserServiceImpl implements IUserService{
         }
         return ServerResponse.createBySuccess(user);
     }
+
+    /*判断用户是否是管理员*/
+    public ServerResponse<String> checkAdminRole(User user){
+        if (user != null && user.getRole() == Const.Role.ROLE_ADMIN){
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
+    }
 }
