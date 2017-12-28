@@ -141,4 +141,31 @@
     where checked = 0
     and user_id = #{userId}
   </select>
+
+  <delete id="deleteByUserIdProductIds" parameterType="map">
+    DELETE  from mmall_cart
+    WHERE
+    user_id = #{userId}
+    <if test="productIds != null">
+      and product_id in
+      <foreach collection="productIds" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+  </delete>
+
+  <update id="updateAllOrUnSelectOrProductChecked" parameterType="map">
+    UPDATE mmall_cart
+    set
+      checked = #{selecAllOrUn},
+      update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
+
+  <select id="selectCartProductCount" parameterType="int" resultType="int">
+    select IFNULL(sum(quantity),0) as count from mmall_cart where user_id = #{userId}
+  </select>
 </mapper>

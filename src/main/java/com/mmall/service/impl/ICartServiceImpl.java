@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
@@ -52,11 +53,49 @@ public class ICartServiceImpl implements ICartService {
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
-        CartVo cartVo = this.getCartVoLimit(userId);
-        return ServerResponse.createBySuccess(cartVo);
+        return this.list(userId);
     }
 
 
+    public ServerResponse<CartVo> update(Integer userId,Integer productId,Integer count){
+        Product isHas = productMapper.selectByPrimaryKey(productId);
+        if (productId == null || count == null || isHas == null){
+            return ServerResponse.creteByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        Cart cart = cartMapper.selectCartByUserIdProductId(userId,productId);
+        if (cart != null){
+            cart.setQuantity(count);
+            int updateCount = cartMapper.updateByPrimaryKeySelective(cart);
+            if (updateCount > 0){
+                return this.list(userId);
+            }
+        }
+        return ServerResponse.creteByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+
+    }
+
+    public ServerResponse<CartVo> deleteProducts(Integer userId,String productIds){
+        List<String> productIdsList = Splitter.on(",").splitToList(productIds);
+        if (userId != null && CollectionUtils.isNotEmpty(productIdsList)){
+            cartMapper.deleteByUserIdProductIds(userId,productIdsList);
+            return this.list(userId);
+        }
+        return ServerResponse.creteByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+    }
+
+    public ServerResponse<CartVo> list(Integer userId){
+        return ServerResponse.createBySuccess(this.getCartVoLimit(userId));
+    }
+
+    public ServerResponse<CartVo> updateAllOrUnSelectOrProductChecked(Integer userId,Integer checked,Integer productId){
+        cartMapper.updateAllOrUnSelectOrProductChecked(userId,checked,productId);
+        return this.list(userId);
+    }
+
+    public ServerResponse<Integer> getProductCount(Integer userId){
+        int count = cartMapper.selectCartProductCount(userId);
+        return ServerResponse.createBySuccess(count);
+    }
     private CartVo getCartVoLimit(Integer userId){
         CartVo cartVo = new CartVo();
         List<CartProductVo> cartProductVoList = Lists.newArrayList();
